@@ -225,4 +225,65 @@ mod tests {
             );
         }
     }
+
+    #[test]
+    fn test_connecting_vectors_8_segments() {
+        let half_size = 1.0;
+        let radius = 1.0;
+        let z_bottom = 0.0;
+        let z_top = 10.0;
+
+        let square = generate_square(half_size, z_bottom, 8);
+        let circle = generate_circle(radius, z_top, 8);
+
+        // With 8 segments, circle has vertices every 45° starting at -135°
+        // Square has 2 vertices per side:
+        //   Bottom edge: (-1,-1), (0,-1)
+        //   Right edge:  (1,-1), (1,0)
+        //   Top edge:    (1,1), (0,1)
+        //   Left edge:   (-1,1), (-1,0)
+        //
+        // Circle vertices at angles: -135°, -90°, -45°, 0°, 45°, 90°, 135°, 180°
+        let sqrt2_2 = std::f64::consts::FRAC_1_SQRT_2;
+        let expected = [
+            // vertex 0: square(-1, -1) -> circle(-√2/2, -√2/2) at -135°
+            (-sqrt2_2 - (-1.0), -sqrt2_2 - (-1.0), z_top - z_bottom),
+            // vertex 1: square(0, -1) -> circle(0, -1) at -90°
+            (0.0 - 0.0, -1.0 - (-1.0), z_top - z_bottom),
+            // vertex 2: square(1, -1) -> circle(√2/2, -√2/2) at -45°
+            (sqrt2_2 - 1.0, -sqrt2_2 - (-1.0), z_top - z_bottom),
+            // vertex 3: square(1, 0) -> circle(1, 0) at 0°
+            (1.0 - 1.0, 0.0 - 0.0, z_top - z_bottom),
+            // vertex 4: square(1, 1) -> circle(√2/2, √2/2) at 45°
+            (sqrt2_2 - 1.0, sqrt2_2 - 1.0, z_top - z_bottom),
+            // vertex 5: square(0, 1) -> circle(0, 1) at 90°
+            (0.0 - 0.0, 1.0 - 1.0, z_top - z_bottom),
+            // vertex 6: square(-1, 1) -> circle(-√2/2, √2/2) at 135°
+            (-sqrt2_2 - (-1.0), sqrt2_2 - 1.0, z_top - z_bottom),
+            // vertex 7: square(-1, 0) -> circle(-1, 0) at 180°
+            (-1.0 - (-1.0), 0.0 - 0.0, z_top - z_bottom),
+        ];
+
+        for i in 0..8 {
+            let dx = circle[i].pos.x - square[i].pos.x;
+            let dy = circle[i].pos.y - square[i].pos.y;
+            let dz = circle[i].pos.z - square[i].pos.z;
+
+            assert!(
+                (dx - expected[i].0).abs() < 1e-10,
+                "Vertex {i}: dx {dx:.6} != expected {:.6}",
+                expected[i].0
+            );
+            assert!(
+                (dy - expected[i].1).abs() < 1e-10,
+                "Vertex {i}: dy {dy:.6} != expected {:.6}",
+                expected[i].1
+            );
+            assert!(
+                (dz - expected[i].2).abs() < 1e-10,
+                "Vertex {i}: dz {dz:.6} != expected {:.6}",
+                expected[i].2
+            );
+        }
+    }
 }
