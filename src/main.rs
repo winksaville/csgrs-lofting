@@ -3,6 +3,72 @@ use csgrs::mesh::vertex::Vertex;
 use csgrs::sketch::Sketch;
 use nalgebra::{Point3, Vector3};
 
+/// Generate a square polygon with `segments` vertices at given z height.
+/// Vertices are distributed evenly (segments/4 per side), starting at
+/// (-half, -half) and going counter-clockwise.
+fn generate_square(half_size: f64, z: f64, segments: u64) -> Vec<Vertex> {
+    let pts_per_side = segments / 4;
+    let mut pts: Vec<Vertex> = Vec::with_capacity(segments as usize);
+
+    // Bottom edge: (-half, -half) to (half, -half)
+    for i in 0..pts_per_side {
+        let t = i as f64 / pts_per_side as f64;
+        let x = -half_size + t * (2.0 * half_size);
+        pts.push(Vertex::new(
+            Point3::new(x, -half_size, z),
+            Vector3::new(0.0, -1.0, 0.0),
+        ));
+    }
+    // Right edge: (half, -half) to (half, half)
+    for i in 0..pts_per_side {
+        let t = i as f64 / pts_per_side as f64;
+        let y = -half_size + t * (2.0 * half_size);
+        pts.push(Vertex::new(
+            Point3::new(half_size, y, z),
+            Vector3::new(1.0, 0.0, 0.0),
+        ));
+    }
+    // Top edge: (half, half) to (-half, half)
+    for i in 0..pts_per_side {
+        let t = i as f64 / pts_per_side as f64;
+        let x = half_size - t * (2.0 * half_size);
+        pts.push(Vertex::new(
+            Point3::new(x, half_size, z),
+            Vector3::new(0.0, 1.0, 0.0),
+        ));
+    }
+    // Left edge: (-half, half) to (-half, -half)
+    for i in 0..pts_per_side {
+        let t = i as f64 / pts_per_side as f64;
+        let y = half_size - t * (2.0 * half_size);
+        pts.push(Vertex::new(
+            Point3::new(-half_size, y, z),
+            Vector3::new(-1.0, 0.0, 0.0),
+        ));
+    }
+
+    pts
+}
+
+/// Generate a circle polygon with `segments` vertices at given z height.
+/// Starts at -135° (-3π/4) to align with square's starting corner.
+fn generate_circle(radius: f64, z: f64, segments: u64) -> Vec<Vertex> {
+    let start_angle = -3.0 * std::f64::consts::PI / 4.0;
+    let mut pts: Vec<Vertex> = Vec::with_capacity(segments as usize);
+
+    for i in 0..segments {
+        let angle = start_angle + 2.0 * std::f64::consts::PI * (i as f64) / (segments as f64);
+        let x = radius * angle.cos();
+        let y = radius * angle.sin();
+        pts.push(Vertex::new(
+            Point3::new(x, y, z),
+            Vector3::new(angle.cos(), angle.sin(), 0.0),
+        ));
+    }
+
+    pts
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _tube_od = 12.0;
     let tube_id = 8.0;
@@ -27,61 +93,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let circle_radius = (tube_id / 2.0) - inside_wall_thickness;
     let half_square = square_sz / 2.0;
 
-    // Create square polygon with `segments` vertices at z=0
-    // Distribute vertices evenly: segments/4 per side
-    let pts_per_side = segments / 4;
-    let mut square_pts: Vec<Vertex> = Vec::with_capacity(segments as usize);
-
-    // Bottom edge: (-half, -half) to (half, -half)
-    for i in 0..pts_per_side {
-        let t = i as f64 / pts_per_side as f64;
-        let x = -half_square + t * (2.0 * half_square);
-        square_pts.push(Vertex::new(
-            Point3::new(x, -half_square, 0.0),
-            Vector3::new(0.0, -1.0, 0.0),
-        ));
-    }
-    // Right edge: (half, -half) to (half, half)
-    for i in 0..pts_per_side {
-        let t = i as f64 / pts_per_side as f64;
-        let y = -half_square + t * (2.0 * half_square);
-        square_pts.push(Vertex::new(
-            Point3::new(half_square, y, 0.0),
-            Vector3::new(1.0, 0.0, 0.0),
-        ));
-    }
-    // Top edge: (half, half) to (-half, half)
-    for i in 0..pts_per_side {
-        let t = i as f64 / pts_per_side as f64;
-        let x = half_square - t * (2.0 * half_square);
-        square_pts.push(Vertex::new(
-            Point3::new(x, half_square, 0.0),
-            Vector3::new(0.0, 1.0, 0.0),
-        ));
-    }
-    // Left edge: (-half, half) to (-half, -half)
-    for i in 0..pts_per_side {
-        let t = i as f64 / pts_per_side as f64;
-        let y = half_square - t * (2.0 * half_square);
-        square_pts.push(Vertex::new(
-            Point3::new(-half_square, y, 0.0),
-            Vector3::new(-1.0, 0.0, 0.0),
-        ));
-    }
-
-    // Create circle polygon with `segments` vertices at z=length
-    // Start at -135° (-3π/4) to align with square's starting corner at (-half, -half)
-    let start_angle = -3.0 * std::f64::consts::PI / 4.0;
-    let mut circle_pts: Vec<Vertex> = Vec::with_capacity(segments as usize);
-    for i in 0..segments {
-        let angle = start_angle + 2.0 * std::f64::consts::PI * (i as f64) / (segments as f64);
-        let x = circle_radius * angle.cos();
-        let y = circle_radius * angle.sin();
-        circle_pts.push(Vertex::new(
-            Point3::new(x, y, length),
-            Vector3::new(angle.cos(), angle.sin(), 0.0),
-        ));
-    }
+    let square_pts = generate_square(half_square, 0.0, segments);
+    let circle_pts = generate_circle(circle_radius, length, segments);
 
     let bottom_poly: Polygon<()> = Polygon::new(square_pts, None);
     let top_poly: Polygon<()> = Polygon::new(circle_pts, None);
