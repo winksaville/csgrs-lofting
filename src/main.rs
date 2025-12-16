@@ -109,3 +109,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_vertex_count_4_segments() {
+        let square = generate_square(1.0, 0.0, 4);
+        let circle = generate_circle(1.0, 0.0, 4);
+
+        assert_eq!(square.len(), 4);
+        assert_eq!(circle.len(), 4);
+    }
+
+    #[test]
+    fn test_vertex_count_8_segments() {
+        let square = generate_square(1.0, 0.0, 8);
+        let circle = generate_circle(1.0, 0.0, 8);
+
+        assert_eq!(square.len(), 8);
+        assert_eq!(circle.len(), 8);
+    }
+}
