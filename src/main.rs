@@ -178,4 +178,51 @@ mod tests {
         assert!((circle[3].pos.x - r * a3.cos()).abs() < 1e-10);
         assert!((circle[3].pos.y - r * a3.sin()).abs() < 1e-10);
     }
+
+    #[test]
+    fn test_connecting_vectors_4_segments() {
+        let half_size = 1.0;
+        let radius = 1.0;
+        let z_bottom = 0.0;
+        let z_top = 10.0;
+
+        let square = generate_square(half_size, z_bottom, 4);
+        let circle = generate_circle(radius, z_top, 4);
+
+        // Precompute expected vectors from square corners to circle points
+        // Square corner 0: (-1, -1), Circle point 0: (-√2/2, -√2/2)
+        let sqrt2_2 = std::f64::consts::FRAC_1_SQRT_2;
+        let expected = [
+            // vertex 0: (-1, -1) -> (-√2/2, -√2/2)
+            (-sqrt2_2 - (-1.0), -sqrt2_2 - (-1.0), z_top - z_bottom),
+            // vertex 1: (1, -1) -> (√2/2, -√2/2)
+            (sqrt2_2 - 1.0, -sqrt2_2 - (-1.0), z_top - z_bottom),
+            // vertex 2: (1, 1) -> (√2/2, √2/2)
+            (sqrt2_2 - 1.0, sqrt2_2 - 1.0, z_top - z_bottom),
+            // vertex 3: (-1, 1) -> (-√2/2, √2/2)
+            (-sqrt2_2 - (-1.0), sqrt2_2 - 1.0, z_top - z_bottom),
+        ];
+
+        for i in 0..4 {
+            let dx = circle[i].pos.x - square[i].pos.x;
+            let dy = circle[i].pos.y - square[i].pos.y;
+            let dz = circle[i].pos.z - square[i].pos.z;
+
+            assert!(
+                (dx - expected[i].0).abs() < 1e-10,
+                "Vertex {i}: dx {dx:.6} != expected {:.6}",
+                expected[i].0
+            );
+            assert!(
+                (dy - expected[i].1).abs() < 1e-10,
+                "Vertex {i}: dy {dy:.6} != expected {:.6}",
+                expected[i].1
+            );
+            assert!(
+                (dz - expected[i].2).abs() < 1e-10,
+                "Vertex {i}: dz {dz:.6} != expected {:.6}",
+                expected[i].2
+            );
+        }
+    }
 }
