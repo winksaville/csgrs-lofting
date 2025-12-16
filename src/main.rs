@@ -70,9 +70,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Create circle polygon with `segments` vertices at z=length
+    // Start at -135° (-3π/4) to align with square's starting corner at (-half, -half)
+    let start_angle = -3.0 * std::f64::consts::PI / 4.0;
     let mut circle_pts: Vec<Vertex> = Vec::with_capacity(segments as usize);
     for i in 0..segments {
-        let angle = 2.0 * std::f64::consts::PI * (i as f64) / (segments as f64);
+        let angle = start_angle + 2.0 * std::f64::consts::PI * (i as f64) / (segments as f64);
         let x = circle_radius * angle.cos();
         let y = circle_radius * angle.sin();
         circle_pts.push(Vertex::new(
