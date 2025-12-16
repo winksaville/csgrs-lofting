@@ -152,4 +152,30 @@ mod tests {
         assert!((square[3].pos.x - (-1.0)).abs() < 1e-10);
         assert!((square[3].pos.y - 1.0).abs() < 1e-10);
     }
+
+    #[test]
+    fn test_circle_4_segments() {
+        let r = 1.0;
+        let circle = generate_circle(r, 0.0, 4);
+
+        // Vertex 0: angle -135° (-3π/4)
+        let a0 = -3.0 * std::f64::consts::PI / 4.0;
+        assert!((circle[0].pos.x - r * a0.cos()).abs() < 1e-10);
+        assert!((circle[0].pos.y - r * a0.sin()).abs() < 1e-10);
+
+        // Vertex 1: angle -45° (-π/4)
+        let a1 = -std::f64::consts::PI / 4.0;
+        assert!((circle[1].pos.x - r * a1.cos()).abs() < 1e-10);
+        assert!((circle[1].pos.y - r * a1.sin()).abs() < 1e-10);
+
+        // Vertex 2: angle 45° (π/4)
+        let a2 = std::f64::consts::PI / 4.0;
+        assert!((circle[2].pos.x - r * a2.cos()).abs() < 1e-10);
+        assert!((circle[2].pos.y - r * a2.sin()).abs() < 1e-10);
+
+        // Vertex 3: angle 135° (3π/4)
+        let a3 = 3.0 * std::f64::consts::PI / 4.0;
+        assert!((circle[3].pos.x - r * a3.cos()).abs() < 1e-10);
+        assert!((circle[3].pos.y - r * a3.sin()).abs() < 1e-10);
+    }
 }
