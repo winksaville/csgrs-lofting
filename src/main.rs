@@ -131,4 +131,25 @@ mod tests {
         assert_eq!(square.len(), 8);
         assert_eq!(circle.len(), 8);
     }
+
+    #[test]
+    fn test_square_corners_4_segments() {
+        let square = generate_square(1.0, 0.0, 4);
+
+        // Corner 0: (-1, -1)
+        assert!((square[0].pos.x - (-1.0)).abs() < 1e-10);
+        assert!((square[0].pos.y - (-1.0)).abs() < 1e-10);
+
+        // Corner 1: (1, -1)
+        assert!((square[1].pos.x - 1.0).abs() < 1e-10);
+        assert!((square[1].pos.y - (-1.0)).abs() < 1e-10);
+
+        // Corner 2: (1, 1)
+        assert!((square[2].pos.x - 1.0).abs() < 1e-10);
+        assert!((square[2].pos.y - 1.0).abs() < 1e-10);
+
+        // Corner 3: (-1, 1)
+        assert!((square[3].pos.x - (-1.0)).abs() < 1e-10);
+        assert!((square[3].pos.y - 1.0).abs() < 1e-10);
+    }
 }
