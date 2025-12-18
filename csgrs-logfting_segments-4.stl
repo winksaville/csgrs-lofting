@@ -1,16 +1,16 @@
 solid csgrs-logfting_segments-4
   facet normal -0.000000 0.000000 1.000000
     outer loop
-      vertex 1.198500 1.198500 0.000000
-      vertex -1.198500 -1.198500 0.000000
-      vertex 1.198500 -1.198500 0.000000
+      vertex 1.000000 1.000000 0.000000
+      vertex -1.000000 -1.000000 0.000000
+      vertex 1.000000 -1.000000 0.000000
     endloop
   endfacet
   facet normal -0.000000 0.000000 1.000000
     outer loop
-      vertex -1.198500 1.198500 0.000000
-      vertex -1.198500 -1.198500 0.000000
-      vertex 1.198500 1.198500 0.000000
+      vertex -1.000000 1.000000 0.000000
+      vertex -1.000000 -1.000000 0.000000
+      vertex 1.000000 1.000000 0.000000
     endloop
   endfacet
   facet normal 0.000000 0.000000 1.000000
@@ -27,59 +27,59 @@ solid csgrs-logfting_segments-4
       vertex 1.414214 1.414214 20.000000
     endloop
   endfacet
-  facet normal 0.000000 -0.999942 -0.010785
-    outer loop
-      vertex -1.198500 -1.198500 0.000000
-      vertex 1.198500 -1.198500 0.000000
-      vertex -1.414214 -1.414214 20.000000
-    endloop
-  endfacet
-  facet normal 0.000000 -0.999942 -0.010785
+  facet normal 0.000000 -0.999786 -0.020706
     outer loop
       vertex 1.414214 -1.414214 20.000000
-      vertex -1.414214 -1.414214 20.000000
-      vertex 1.198500 -1.198500 0.000000
+      vertex -1.000000 -1.000000 0.000000
+      vertex 1.000000 -1.000000 0.000000
     endloop
   endfacet
-  facet normal 0.999942 0.000000 -0.010785
+  facet normal 0.000000 -0.999786 -0.020706
     outer loop
-      vertex 1.198500 -1.198500 0.000000
-      vertex 1.198500 1.198500 0.000000
+      vertex -1.414214 -1.414214 20.000000
+      vertex -1.000000 -1.000000 0.000000
       vertex 1.414214 -1.414214 20.000000
     endloop
   endfacet
-  facet normal 0.999942 0.000000 -0.010785
+  facet normal 0.999786 0.000000 -0.020706
     outer loop
       vertex 1.414214 1.414214 20.000000
-      vertex 1.414214 -1.414214 20.000000
-      vertex 1.198500 1.198500 0.000000
+      vertex 1.000000 -1.000000 0.000000
+      vertex 1.000000 1.000000 0.000000
     endloop
   endfacet
-  facet normal 0.000000 0.999942 -0.010785
+  facet normal 0.999786 0.000000 -0.020706
+    outer loop
+      vertex 1.414214 -1.414214 20.000000
+      vertex 1.000000 -1.000000 0.000000
+      vertex 1.414214 1.414214 20.000000
+    endloop
+  endfacet
+  facet normal 0.000000 0.999786 -0.020706
     outer loop
       vertex -1.414214 1.414214 20.000000
-      vertex 1.198500 1.198500 0.000000
-      vertex -1.198500 1.198500 -0.000000
+      vertex 1.000000 1.000000 0.000000
+      vertex -1.000000 1.000000 -0.000000
     endloop
   endfacet
-  facet normal 0.000000 0.999942 -0.010785
+  facet normal 0.000000 0.999786 -0.020706
     outer loop
       vertex 1.414214 1.414214 20.000000
-      vertex 1.198500 1.198500 0.000000
+      vertex 1.000000 1.000000 0.000000
       vertex -1.414214 1.414214 20.000000
     endloop
   endfacet
-  facet normal -0.999942 -0.000000 -0.010785
+  facet normal -0.999786 -0.000000 -0.020706
     outer loop
       vertex -1.414214 -1.414214 20.000000
-      vertex -1.198500 1.198500 0.000000
-      vertex -1.198500 -1.198500 0.000000
+      vertex -1.000000 1.000000 0.000000
+      vertex -1.000000 -1.000000 0.000000
     endloop
   endfacet
-  facet normal -0.999942 -0.000000 -0.010785
+  facet normal -0.999786 -0.000000 -0.020706
     outer loop
       vertex -1.414214 1.414214 20.000000
-      vertex -1.198500 1.198500 0.000000
+      vertex -1.000000 1.000000 0.000000
       vertex -1.414214 -1.414214 20.000000
     endloop
   endfacet

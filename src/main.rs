@@ -69,12 +69,18 @@ fn generate_circle(radius: f64, z: f64, segments: u64) -> Vec<Vertex> {
     pts
 }
 
+fn print_pts(info: &str, segments: u64, pts: &[Vertex]) {
+    println!("{info} {segments:?}");
+    for (i, vertex) in pts.iter().enumerate() {
+        println!("{i}: {:?}", vertex.pos);
+    }
+}
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _tube_od = 12.0;
     let tube_id = 8.0;
     let length = 20.0;
     let inside_wall_thickness = 2.0;
-    let square_sz = 2.397; // Default from rerf-bd-bobbins.py `default_cube_size = round_to_resolution(2.4, default_bed_resolution)`
+    let square_sz = 2.0; //2.397; // Default from rerf-bd-bobbins.py `default_cube_size = round_to_resolution(2.4, default_bed_resolution)`
     let segments_string = std::env::args().nth(1).unwrap_or("50".to_string());
     let segments: u64 = match segments_string.parse() {
         Ok(v) => v,
@@ -83,7 +89,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Ok(());
         }
     };
-    if segments < 4 || ((segments % 4) != 0) {
+    if segments < 4 || !segments.is_multiple_of(4) {
         println!("Segements must be >= 4 and a multiple of 4");
         return Ok(());
     }
@@ -94,15 +100,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let half_square = square_sz / 2.0;
 
     let square_pts = generate_square(half_square, 0.0, segments);
+    print_pts("square_pts:", segments, &square_pts);
     let circle_pts = generate_circle(circle_radius, length, segments);
+    print_pts("circle_pts:", segments, &circle_pts);
 
     let bottom_poly: Polygon<()> = Polygon::new(square_pts, None);
     let top_poly: Polygon<()> = Polygon::new(circle_pts, None);
-    let loft_obj = Sketch::loft(&bottom_poly, &top_poly, false)
-        .map_err(|e| format!("{:?}", e))?;
+    let lofted_obj =
+        Sketch::loft(&bottom_poly, &top_poly, false).map_err(|e| format!("{:?}", e))?;
 
-    let name: String = format!("csgrs-logfting_segments-{segments}").into();
-    let shape: Vec<u8> = loft_obj.to_stl_ascii(&name).into();
+    let name: String = format!("csgrs-logfting_segments-{segments}");
+    let shape: Vec<u8> = lofted_obj.to_stl_ascii(&name).into();
     let file_name: String = name + ".stl";
     println!("Writing file: {}", file_name);
     std::fs::write(file_name, shape).unwrap();
